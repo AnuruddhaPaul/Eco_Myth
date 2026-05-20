@@ -1,0 +1,881 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EcoMyth-VLM · Annotation Studio</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=IM+Fell+English:ital@0;1&family=JetBrains+Mono:wght@400;500&display=swap');
+
+  :root {
+    --ink:        #0a0e1a;
+    --ink-soft:   #1c2340;
+    --ink-faint:  #2e3a5c;
+    --rule:       #1e2d4a;
+    --paper:      #f4f1eb;
+    --paper-warm: #ede9e0;
+    --blue:       #1a3a6e;
+    --blue-mid:   #2455a0;
+    --blue-light: #3470c8;
+    --blue-glow:  #5590e8;
+    --gold:       #c89b3c;
+    --gold-light: #e8bc5a;
+    --white:      #ffffff;
+    --success:    #1a6e3a;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Times New Roman', 'Times', serif;
+    background: var(--ink);
+    color: var(--paper);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  header {
+    background: linear-gradient(135deg, var(--ink) 0%, var(--ink-soft) 60%, var(--blue) 100%);
+    border-bottom: 1px solid var(--rule);
+    padding: 14px 28px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky; top: 0; z-index: 100;
+    box-shadow: 0 2px 20px rgba(0,0,0,0.6);
+  }
+
+  .logo {
+    font-family: 'IM Fell English', serif;
+    font-size: 22px;
+    color: var(--gold-light);
+    letter-spacing: 0.03em;
+  }
+  .logo span { color: var(--blue-glow); font-style: italic; }
+  .logo small {
+    font-size: 12px;
+    color: var(--paper-warm);
+    opacity: 0.6;
+    margin-left: 12px;
+    font-style: normal;
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  .header-right { display: flex; align-items: center; gap: 14px; }
+
+  .progress-pill {
+    background: var(--ink-faint);
+    border: 1px solid var(--rule);
+    border-radius: 20px;
+    padding: 5px 14px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: var(--blue-glow);
+    letter-spacing: 0.05em;
+  }
+
+  /* ── Splash / loading ── */
+  #splash {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: calc(100vh - 60px);
+    gap: 18px;
+  }
+
+  .splash-title {
+    font-family: 'IM Fell English', serif;
+    font-size: 28px;
+    color: var(--gold-light);
+  }
+
+  .splash-spinner {
+    width: 40px; height: 40px;
+    border: 3px solid var(--rule);
+    border-top-color: var(--blue-glow);
+    border-radius: 50%;
+    animation: spin 0.9s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .splash-msg {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    color: var(--blue-glow);
+  }
+
+  .splash-error {
+    background: rgba(200,60,60,0.12);
+    border: 1px solid rgba(255,80,80,0.3);
+    border-radius: 6px;
+    padding: 16px 24px;
+    max-width: 560px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: #ff9090;
+    line-height: 1.7;
+    text-align: center;
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    padding: 9px 20px;
+    border-radius: 5px;
+    border: none;
+    font-family: 'Times New Roman', serif;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+  .btn-primary {
+    background: linear-gradient(135deg, var(--blue), var(--blue-mid));
+    color: var(--white);
+    box-shadow: 0 2px 12px rgba(36,85,160,0.4);
+  }
+  .btn-primary:hover { transform: translateY(-1px); }
+  .btn-outline {
+    background: transparent;
+    border: 1px solid var(--rule);
+    color: var(--paper-warm);
+    font-size: 13px;
+    padding: 7px 14px;
+  }
+  .btn-outline:hover { border-color: var(--blue-glow); color: var(--blue-glow); }
+  .btn-copy {
+    background: var(--ink-faint);
+    border: 1px solid var(--blue);
+    color: var(--blue-glow);
+    font-size: 12px;
+    padding: 6px 14px;
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .btn-copy:hover { background: var(--blue); color: var(--white); }
+  .btn-save {
+    background: linear-gradient(135deg, var(--success), #2a8a4a);
+    color: var(--white);
+    font-size: 15px;
+    padding: 10px 26px;
+    box-shadow: 0 2px 12px rgba(26,110,58,0.4);
+  }
+  .btn-save:hover { transform: translateY(-1px); }
+  .btn-save.saving { opacity: 0.7; pointer-events: none; }
+
+  /* ── Main layout ── */
+  #app { display: none; height: calc(100vh - 60px); overflow: hidden; }
+
+  .main-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto auto 1fr;
+    height: 100%;
+  }
+
+  /* Meta strip */
+  .meta-strip {
+    grid-column: 1 / -1;
+    background: var(--ink-soft);
+    border-bottom: 1px solid var(--rule);
+    padding: 7px 18px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .mb {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    background: var(--ink-faint);
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    padding: 3px 8px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    white-space: nowrap;
+  }
+  .mb .k { color: var(--blue-glow); text-transform: uppercase; letter-spacing: 0.07em; font-size: 10px; }
+  .mb .v { color: var(--paper); }
+  .mb.serial {
+    background: linear-gradient(135deg, var(--blue), var(--blue-mid));
+    border-color: var(--blue-light);
+    padding: 4px 12px;
+  }
+  .mb.serial .v { color: var(--white); font-size: 13px; }
+
+  /* Ground truth panel */
+  .gt-panel {
+    grid-column: 1 / -1;
+    background: linear-gradient(135deg, rgba(26,92,58,0.12), rgba(26,58,110,0.12));
+    border-bottom: 1px solid rgba(74,222,128,0.2);
+    padding: 9px 18px;
+    display: flex;
+    align-items: flex-start;
+    gap: 0;
+  }
+  .gt-label {
+    font-family: 'IM Fell English', serif;
+    font-size: 11px;
+    color: #4ade80;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    white-space: nowrap;
+    margin-right: 14px;
+    padding-top: 3px;
+    opacity: 0.9;
+  }
+  .gt-facts { display: flex; flex-wrap: wrap; gap: 7px; flex: 1; }
+  .gt-fact {
+    background: rgba(26,92,58,0.2);
+    border: 1px solid rgba(74,222,128,0.2);
+    border-radius: 4px;
+    padding: 3px 9px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    display: flex; gap: 5px; align-items: center;
+  }
+  .gt-fact .gk { color: #4ade80; text-transform: uppercase; letter-spacing: 0.06em; font-size: 10px; opacity: 0.8; }
+  .gt-fact .gv { color: var(--paper); }
+  .gt-fact.iucn-CR { border-color:rgba(255,80,80,0.4);  background:rgba(255,80,80,0.1);  }
+  .gt-fact.iucn-CR .gk { color:#ff9090; }
+  .gt-fact.iucn-EN { border-color:rgba(255,140,0,0.4);  background:rgba(255,140,0,0.1);  }
+  .gt-fact.iucn-EN .gk { color:#ffa040; }
+  .gt-fact.iucn-VU { border-color:rgba(255,200,0,0.4);  background:rgba(255,200,0,0.1);  }
+  .gt-fact.iucn-VU .gk { color:#ffd040; }
+  .gt-fact.iucn-NT { border-color:rgba(100,200,100,0.4);background:rgba(100,200,100,0.1);}
+  .gt-fact.iucn-NT .gk { color:#80d080; }
+  .gt-fact.iucn-LC { border-color:rgba(74,222,128,0.4); background:rgba(74,222,128,0.1); }
+  .gt-fact.iucn-LC .gk { color:#4ade80; }
+
+  /* Panels */
+  .panel-image {
+    border-right: 1px solid var(--rule);
+    display: flex; flex-direction: column;
+    overflow: hidden; background: var(--ink);
+  }
+  .panel-hdr {
+    padding: 8px 15px;
+    border-bottom: 1px solid var(--rule);
+    font-family: 'IM Fell English', serif;
+    font-size: 12px; color: var(--gold);
+    text-transform: uppercase; letter-spacing: 0.12em;
+    background: var(--ink-soft);
+    display: flex; align-items: center; justify-content: space-between;
+    flex-shrink: 0;
+  }
+  .image-container {
+    flex: 1; display: flex; align-items: center; justify-content: center;
+    padding: 14px; overflow: hidden;
+  }
+  #story-image {
+    max-width: 100%; max-height: 100%; object-fit: contain;
+    border-radius: 4px; box-shadow: 0 8px 40px rgba(0,0,0,0.6);
+    border: 1px solid var(--rule);
+  }
+  .img-placeholder {
+    border: 2px dashed var(--rule); border-radius: 8px;
+    padding: 40px 30px; text-align: center;
+    color: var(--ink-faint);
+    font-family: 'JetBrains Mono', monospace; font-size: 11px; line-height: 1.8;
+  }
+  .image-actions {
+    padding: 9px 13px; border-top: 1px solid var(--rule);
+    display: flex; gap: 8px; background: var(--ink-soft); flex-shrink: 0;
+  }
+
+  .panel-right {
+    display: flex; flex-direction: column;
+    overflow: hidden; background: var(--ink);
+  }
+  .story-section {
+    flex: 0 0 35%; overflow-y: auto;
+    border-bottom: 1px solid var(--rule);
+  }
+  .story-text {
+    padding: 13px 17px; font-size: 14px; line-height: 1.85;
+    color: var(--paper-warm); font-style: italic;
+  }
+  .ratings-section { flex: 1; overflow-y: auto; padding: 13px 17px; }
+  .ratings-title {
+    font-family: 'IM Fell English', serif; font-size: 13px;
+    color: var(--gold); text-transform: uppercase; letter-spacing: 0.12em;
+    margin-bottom: 11px; padding-bottom: 6px; border-bottom: 1px solid var(--rule);
+  }
+
+  /* Rating rows */
+  .rating-row { display: flex; flex-direction: column; gap: 4px; margin-bottom: 13px; }
+  .rating-top { display: flex; justify-content: space-between; align-items: center; }
+  .rating-label { font-size: 13px; color: var(--paper); }
+
+  .score-box { display: flex; align-items: center; gap: 7px; }
+  .score-dot {
+    width: 10px; height: 10px; border-radius: 50%;
+    display: inline-block; transition: background 0.12s;
+  }
+  .score-val {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 18px; font-weight: 500;
+    color: var(--gold-light); min-width: 36px; text-align: right;
+    transition: color 0.12s;
+  }
+
+  .rating-hint {
+    font-family: 'JetBrains Mono', monospace; font-size: 10px;
+    color: #4ade80; opacity: 0.75;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+
+  /* Continuous slider */
+  input[type="range"] {
+    -webkit-appearance: none; appearance: none;
+    width: 100%; height: 5px; border-radius: 3px;
+    cursor: pointer; outline: none;
+  }
+  input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 20px; height: 20px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--blue-light), var(--blue-glow));
+    border: 2px solid var(--white);
+    box-shadow: 0 2px 10px rgba(84,144,232,0.6);
+    cursor: pointer; transition: transform 0.1s;
+  }
+  input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.25); }
+
+  .slider-ticks {
+    display: flex; justify-content: space-between;
+    padding: 0 2px; margin-top: 2px;
+  }
+  .tick { display: flex; flex-direction: column; align-items: center; gap: 1px; }
+  .tick-line { width: 1px; height: 4px; background: var(--ink-faint); }
+  .tick-n { font-family: 'JetBrains Mono', monospace; font-size: 9px; color: var(--ink-faint); }
+  .tick-d { font-size: 9px; color: var(--ink-faint); font-style: italic; }
+
+  /* Save bar */
+  .save-bar {
+    padding: 9px 15px; background: var(--ink-soft);
+    border-top: 1px solid var(--rule);
+    display: flex; align-items: center; gap: 10px; flex-shrink: 0;
+  }
+  .save-status {
+    font-family: 'JetBrains Mono', monospace; font-size: 11px;
+    padding: 4px 12px; border-radius: 3px;
+  }
+  .save-status.saved   { color:#4ade80; background:rgba(74,222,128,0.08); border:1px solid rgba(74,222,128,0.2); }
+  .save-status.unsaved { color:var(--gold); background:rgba(200,155,60,0.08); border:1px solid rgba(200,155,60,0.2); }
+  .save-status.error   { color:#ff9090; background:rgba(255,80,80,0.08); border:1px solid rgba(255,80,80,0.2); }
+
+  .nav-controls {
+    display: flex; align-items: center; gap: 7px;
+    padding-left: 12px; border-left: 1px solid var(--rule);
+    margin-left: auto;
+  }
+  .nav-input {
+    background: var(--ink); border: 1px solid var(--rule); border-radius: 4px;
+    color: var(--paper); padding: 5px 8px;
+    font-family: 'JetBrains Mono', monospace; font-size: 12px;
+    width: 58px; text-align: center;
+  }
+
+  #toast {
+    position: fixed; bottom: 24px; right: 24px;
+    background: var(--ink-soft); border: 1px solid var(--blue);
+    border-radius: 6px; padding: 11px 18px;
+    font-size: 13px; color: var(--blue-glow);
+    box-shadow: 0 8px 30px rgba(0,0,0,0.5);
+    opacity: 0; transform: translateY(12px);
+    transition: all 0.25s ease; z-index: 999; pointer-events: none;
+  }
+  #toast.show { opacity: 1; transform: translateY(0); }
+
+  ::-webkit-scrollbar { width: 5px; }
+  ::-webkit-scrollbar-track { background: var(--ink); }
+  ::-webkit-scrollbar-thumb { background: var(--rule); border-radius: 3px; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">
+    EcoMyth<span>-VLM</span> · Annotation Studio
+    <small id="file-paths"></small>
+  </div>
+  <div class="header-right">
+    <div class="progress-pill" id="progress-pill">Loading...</div>
+    <button class="btn btn-outline" onclick="exportCSV()" id="export-btn"
+      style="display:none" title="Download full CSV backup">Export CSV</button>
+  </div>
+</header>
+
+<!-- Splash -->
+<div id="splash">
+  <div class="splash-title">Loading from project folder...</div>
+  <div class="splash-spinner" id="spinner"></div>
+  <div class="splash-msg" id="splash-msg">Connecting to annotation server</div>
+  <div class="splash-error" id="splash-error" style="display:none"></div>
+  <button class="btn btn-primary" id="retry-btn"
+    onclick="init()" style="display:none">Retry</button>
+</div>
+
+<!-- Annotation UI -->
+<div id="app">
+  <div class="main-layout">
+
+    <div class="meta-strip" id="meta-strip"></div>
+
+    <div class="gt-panel">
+      <div class="gt-label">&#10003; Ground Truth</div>
+      <div class="gt-facts" id="gt-facts">Loading...</div>
+    </div>
+
+    <!-- Left: image -->
+    <div class="panel-image">
+      <div class="panel-hdr">
+        <span>Wildlife Image</span>
+        <span id="tier-badge" style="font-size:11px;color:var(--paper-warm)"></span>
+      </div>
+      <div class="image-container" id="image-container">
+        <div class="img-placeholder">Loading image...</div>
+      </div>
+      <div class="image-actions">
+        <button class="btn btn-copy" onclick="copyForClaude()">&#8663; Copy for Claude</button>
+        <button class="btn btn-copy" onclick="copyImagePath()">&#128194; Image Path</button>
+      </div>
+    </div>
+
+    <!-- Right: story + ratings -->
+    <div class="panel-right">
+      <div class="panel-hdr" style="background:var(--ink-soft)">
+        <span>Generated Story</span>
+        <span id="story-meta" style="font-size:11px;color:var(--paper-warm)"></span>
+      </div>
+
+      <div class="story-section">
+        <div class="story-text" id="story-text">Loading...</div>
+      </div>
+
+      <div class="ratings-section">
+        <div class="ratings-title">Rate Ecological Accuracy &mdash; 1.0 to 5.0 (step 0.1)</div>
+        <div id="rating-rows"></div>
+        <div style="margin-top:6px">
+          <div style="font-size:11px;color:var(--blue-glow);margin-bottom:5px;
+                      font-family:'JetBrains Mono',monospace;text-transform:uppercase;
+                      letter-spacing:0.1em">Notes (optional)</div>
+          <textarea id="r-notes" rows="2"
+            style="width:100%;background:var(--ink);border:1px solid var(--rule);
+                   border-radius:4px;color:var(--paper);padding:8px;font-size:13px;
+                   font-family:'Times New Roman',serif;resize:vertical;line-height:1.5"></textarea>
+        </div>
+      </div>
+
+      <div class="save-bar">
+        <button class="btn btn-save" id="save-btn" onclick="saveAnnotation()">&#10003; Save Rating</button>
+        <div class="save-status unsaved" id="save-status">Unsaved</div>
+        <div style="width:1px;height:22px;background:var(--rule)"></div>
+        <div class="nav-controls">
+          <button class="btn btn-outline" onclick="navigate(-1)">&#8592; Prev</button>
+          <input type="number" class="nav-input" id="nav-input"
+            onchange="jumpTo(this.value)" min="1">
+          <span style="font-size:11px;color:var(--paper-warm);
+                       font-family:'JetBrains Mono',monospace">
+            / <span id="total-count">0</span>
+          </span>
+          <button class="btn btn-outline" onclick="navigate(1)">Next &#8594;</button>
+          <button class="btn btn-outline" onclick="nextUnannotated()"
+            style="font-size:11px;padding:6px 10px">Next Unannotated</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+let stories     = [];
+let groundTruth = {};
+let annotations = {};
+let currentIdx  = 0;
+
+const IUCN_FULL = {
+  CR:'Critically Endangered', EN:'Endangered', VU:'Vulnerable',
+  NT:'Near Threatened', LC:'Least Concern'
+};
+const TIER_LABELS = {
+  1:'Tier 1 — Iconic', 2:'Tier 2 — Regional',
+  3:'Tier 3 — Rare/CR', 4:'Tier 4 — Confusable'
+};
+
+const RATING_DEFS = [
+  {key:'species', label:'1. Species Identification Accuracy', hint:'species'},
+  {key:'habitat', label:'2. Habitat Accuracy',               hint:'habitat'},
+  {key:'diet',    label:'3. Diet Accuracy',                  hint:'diet'   },
+  {key:'iucn',    label:'4. IUCN Conservation Status',       hint:'iucn'   },
+  {key:'overall', label:'5. Overall Ecological Accuracy',    hint:'overall'},
+];
+
+// ── Initialise: fetch everything from server ──────────────────
+async function init() {
+  setSplash('Connecting to server...', false);
+  document.getElementById('retry-btn').style.display = 'none';
+
+  try {
+    // 1. Check server status
+    setSplash('Checking server...', false);
+    const status = await apiFetch('/api/status');
+    if (!status.ok) throw new Error('Server not responding');
+
+    // 2. Load stories
+    setSplash('Loading stories...', false);
+    const sRes = await apiFetch('/api/stories');
+    if (!sRes.ok) throw new Error(sRes.error || 'Stories not found.\nRun: python select_phase6_stories_fixed.py');
+    stories = sRes.stories;
+
+    // 3. Load ground truth
+    setSplash('Loading ground truth...', false);
+    const gtRes = await apiFetch('/api/groundtruth');
+    if (gtRes.ok) groundTruth = gtRes.groundtruth;
+
+    // 4. Load existing annotations
+    setSplash('Loading saved annotations...', false);
+    const aRes = await apiFetch('/api/annotations');
+    if (aRes.ok) annotations = aRes.annotations;
+
+    // 5. Show app
+    document.getElementById('splash').style.display = 'none';
+    document.getElementById('app').style.display    = 'block';
+    document.getElementById('export-btn').style.display = 'inline-flex';
+    document.getElementById('total-count').textContent  = stories.length;
+
+    buildRatingRows();
+
+    const first = stories.findIndex(s => !annotations[s.serial_number]);
+    renderStory(first >= 0 ? first : 0);
+
+    showToast(`Loaded ${stories.length} stories · ${Object.keys(annotations).length} already annotated`);
+
+  } catch(e) {
+    document.getElementById('spinner').style.display = 'none';
+    document.getElementById('splash-error').style.display = 'block';
+    document.getElementById('splash-error').textContent =
+      'Error: ' + e.message + '\n\nMake sure phase6_server.py is running.';
+    document.getElementById('retry-btn').style.display = 'inline-flex';
+    setSplash('Failed to load', false);
+  }
+}
+
+function setSplash(msg, spin=true) {
+  document.getElementById('splash-msg').textContent = msg;
+  document.getElementById('spinner').style.display  = spin ? 'block' : 'none';
+}
+
+async function apiFetch(url) {
+  const r = await fetch(url);
+  return r.json();
+}
+
+// ── Build rating rows ─────────────────────────────────────────
+function buildRatingRows() {
+  document.getElementById('rating-rows').innerHTML = RATING_DEFS.map(d => `
+    <div class="rating-row">
+      <div class="rating-top">
+        <span class="rating-label">${d.label}</span>
+        <div class="score-box">
+          <span class="score-dot" id="dot-${d.key}" style="background:#eab308"></span>
+          <span class="score-val" id="val-${d.key}">3.0</span>
+        </div>
+      </div>
+      <div class="rating-hint" id="hint-${d.key}"></div>
+      <input type="range" min="1" max="5" step="0.1" value="3"
+        id="r-${d.key}" oninput="updateSlider('${d.key}')">
+      <div class="slider-ticks">
+        <div class="tick"><div class="tick-line"></div><div class="tick-n">1.0</div><div class="tick-d">Wrong</div></div>
+        <div class="tick"><div class="tick-line"></div><div class="tick-n">2.0</div><div class="tick-d">Poor</div></div>
+        <div class="tick"><div class="tick-line"></div><div class="tick-n">3.0</div><div class="tick-d">Partial</div></div>
+        <div class="tick"><div class="tick-line"></div><div class="tick-n">4.0</div><div class="tick-d">Good</div></div>
+        <div class="tick"><div class="tick-line"></div><div class="tick-n">5.0</div><div class="tick-d">Correct</div></div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function scoreColor(v) {
+  const n = parseFloat(v);
+  if (n <= 1.5) return '#ef4444';
+  if (n <= 2.5) return '#f97316';
+  if (n <= 3.5) return '#eab308';
+  if (n <= 4.5) return '#84cc16';
+  return '#22c55e';
+}
+
+function updateSlider(key) {
+  const el  = document.getElementById('r-' + key);
+  const val = parseFloat(el.value);
+  const pct = ((val - 1) / 4) * 100;
+  const col = scoreColor(val);
+  el.style.background = `linear-gradient(to right,
+    ${col} 0%,${col} ${pct}%,var(--rule) ${pct}%,var(--rule) 100%)`;
+  document.getElementById('val-' + key).textContent = val.toFixed(1);
+  document.getElementById('val-' + key).style.color = col;
+  document.getElementById('dot-' + key).style.background = col;
+}
+
+// ── Render story ─────────────────────────────────────────────
+function renderStory(idx) {
+  if (idx < 0 || idx >= stories.length) return;
+  currentIdx = idx;
+  const s  = stories[idx];
+  const gt = groundTruth[s.scientific_name] || {};
+
+  // Meta badges
+  const fmtC = {factual:'#3470c8',childrens:'#1a6e3a',
+                 mythological:'#8b4a00',conservation:'#6e1a3a'};
+  const fc = fmtC[s.format]||'#3470c8';
+
+  document.getElementById('meta-strip').innerHTML = `
+    <div class="mb serial"><span class="k">Serial</span><span class="v">${s.serial_number}</span></div>
+    <div class="mb"><span class="k">Species</span><span class="v">${s.common_name||s.scientific_name}</span></div>
+    <div class="mb"><span class="k">Scientific</span><span class="v" style="font-style:italic">${s.scientific_name}</span></div>
+    <div class="mb" style="border-color:${fc}50">
+      <span class="k" style="color:${fc}">Format</span><span class="v">${cap(s.format)}</span></div>
+    ${s.tradition?`<div class="mb"><span class="k">Tradition</span><span class="v">${s.tradition}</span></div>`:''}
+    <div class="mb"><span class="k">Model</span><span class="v">${s.model_key}</span></div>
+    <div class="mb"><span class="k">Temp</span><span class="v">${s.temperature}</span></div>
+    <div class="mb"><span class="k">${TIER_LABELS[s.tier]||'Tier '+s.tier}</span>
+      <span class="v">Resp #${s.response_idx+1}</span></div>
+  `;
+
+  // Ground truth
+  const iucnCat  = s.iucn_category || gt.iucn_category || '?';
+  const iucnFull = IUCN_FULL[iucnCat] || iucnCat;
+  const trend    = gt.population_trend || '?';
+  const family   = gt.taxonomy_family  || '?';
+  const habs     = (gt.habitat_keywords||[]).slice(0,5).join(', ')||'?';
+  const diets    = (gt.diet_keywords||[]).slice(0,5).join(', ')   ||'?';
+  const ranges   = (gt.range_countries||[]).slice(0,4).join(', ') ||'?';
+
+  document.getElementById('gt-facts').innerHTML = `
+    <div class="gt-fact">
+      <span class="gk">Species</span>
+      <span class="gv">${s.scientific_name} &middot; ${s.common_name||''} &middot; Family ${family}</span>
+    </div>
+    <div class="gt-fact iucn-${iucnCat}">
+      <span class="gk">IUCN</span><span class="gv">${iucnFull} (${iucnCat})</span>
+    </div>
+    <div class="gt-fact">
+      <span class="gk">Population</span><span class="gv">${cap(trend)}</span>
+    </div>
+    <div class="gt-fact">
+      <span class="gk">Habitat</span><span class="gv">${habs}</span>
+    </div>
+    <div class="gt-fact">
+      <span class="gk">Diet</span><span class="gv">${diets}</span>
+    </div>
+    <div class="gt-fact">
+      <span class="gk">Range</span><span class="gv">${ranges}</span>
+    </div>
+  `;
+
+  // Slider hints
+  const hints = {
+    species:`Correct: ${s.scientific_name} (${s.common_name}) Family: ${family}`,
+    habitat:`Correct habitats: ${habs}`,
+    diet:   `Correct diet: ${diets}`,
+    iucn:   `Correct: ${iucnFull} (${iucnCat}) Trend: ${cap(trend)}`,
+    overall:`Check species, habitat, diet, IUCN, range`,
+  };
+  RATING_DEFS.forEach(d => {
+    const el = document.getElementById('hint-'+d.key);
+    if(el) el.textContent = '&#10003; ' + hints[d.hint];
+  });
+
+  // Story
+  document.getElementById('story-text').textContent = s.generated_text||'(No text)';
+  document.getElementById('story-meta').textContent =
+    `${s.model_label||s.model_key} · ${cap(s.format)}`;
+  document.getElementById('tier-badge').textContent = TIER_LABELS[s.tier]||'';
+
+  // Image — served directly from project root via server
+  const cont = document.getElementById('image-container');
+  if (s.image_path) {
+    // Convert backslashes to forward slashes for URL
+    const imgUrl = s.image_path.replace(/\\/g,'/');
+    cont.innerHTML = `<img id="story-image" src="/${imgUrl}"
+      onerror="this.parentElement.innerHTML='<div class=img-placeholder>Image not found<br><small>${s.image_path}</small><br><br>Check server is running from project root.</div>'"
+      alt="${s.scientific_name}">`;
+  } else {
+    cont.innerHTML = '<div class="img-placeholder">No image path in data</div>';
+  }
+
+  // Load existing values
+  const ex = annotations[s.serial_number];
+  RATING_DEFS.forEach(d => {
+    const el = document.getElementById('r-'+d.key);
+    if(el){ el.value = ex?(ex['r_'+d.key]||3):3; updateSlider(d.key); }
+  });
+  document.getElementById('r-notes').value = ex?(ex.notes||''):'';
+
+  const st = document.getElementById('save-status');
+  if(ex){ st.textContent=`Saved · ${ex.saved_at||'—'}`; st.className='save-status saved'; }
+  else  { st.textContent='Unsaved';                      st.className='save-status unsaved'; }
+
+  document.getElementById('nav-input').value = idx+1;
+  updateProgress();
+}
+
+// ── Save — POST to server, writes CSV to disk ────────────────
+async function saveAnnotation() {
+  const s   = stories[currentIdx];
+  const btn = document.getElementById('save-btn');
+  btn.classList.add('saving');
+  btn.textContent = 'Saving...';
+
+  const anno = {
+    serial_number:   s.serial_number,
+    manifest_id:     s.manifest_id,
+    scientific_name: s.scientific_name,
+    common_name:     s.common_name      || '',
+    tier:            s.tier,
+    model_key:       s.model_key,
+    format:          s.format,
+    tradition:       s.tradition        || '',
+    temperature:     s.temperature,
+    response_idx:    s.response_idx,
+    pool:            s.pool             || '',
+    r_species: parseFloat(document.getElementById('r-species').value),
+    r_habitat: parseFloat(document.getElementById('r-habitat').value),
+    r_diet:    parseFloat(document.getElementById('r-diet').value),
+    r_iucn:    parseFloat(document.getElementById('r-iucn').value),
+    r_overall: parseFloat(document.getElementById('r-overall').value),
+    notes:     document.getElementById('r-notes').value.trim(),
+    saved_at:  new Date().toISOString().slice(0,19).replace('T',' '),
+  };
+
+  try {
+    const res = await fetch('/api/save', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({annotation: anno}),
+    });
+    const data = await res.json();
+
+    if (data.ok) {
+      annotations[s.serial_number] = anno;
+      const st = document.getElementById('save-status');
+      st.textContent = `Saved to disk · ${anno.saved_at}`;
+      st.className   = 'save-status saved';
+      showToast(`&#10003; ${s.serial_number} saved to outputs/phase6/`);
+      updateProgress();
+    } else {
+      throw new Error(data.error||'Save failed');
+    }
+  } catch(e) {
+    const st = document.getElementById('save-status');
+    st.textContent = 'Save failed — check server';
+    st.className   = 'save-status error';
+    showToast('Save error: ' + e.message);
+  }
+
+  btn.classList.remove('saving');
+  btn.textContent = '&#10003; Save Rating';
+}
+
+// ── Export CSV (full backup download) ────────────────────────
+function exportCSV() {
+  const cols = [
+    'serial_number','manifest_id','scientific_name','common_name',
+    'tier','model_key','format','tradition','temperature','response_idx','pool',
+    'r_species','r_habitat','r_diet','r_iucn','r_overall','notes','saved_at',
+  ];
+  let csv = cols.join(',') + '\n';
+  Object.values(annotations).forEach(a => {
+    const row = cols.map(c => {
+      const v = String(a[c]!==undefined?a[c]:'');
+      return (v.includes(',')||v.includes('"')||v.includes('\n'))
+        ? '"'+v.replace(/"/g,'""')+'"' : v;
+    });
+    csv += row.join(',') + '\n';
+  });
+  const blob = new Blob([csv],{type:'text/csv;charset=utf-8;'});
+  const url  = URL.createObjectURL(blob);
+  const a    = document.createElement('a');
+  a.href=url; a.download=`phase6_backup_${new Date().toISOString().slice(0,10)}.csv`;
+  a.click(); URL.revokeObjectURL(url);
+  showToast(`Backup downloaded: ${Object.keys(annotations).length} records`);
+}
+
+// ── Copy for Claude ───────────────────────────────────────────
+function copyForClaude() {
+  const s  = stories[currentIdx];
+  const gt = groundTruth[s.scientific_name]||{};
+  const text = [
+    `SERIAL: ${s.serial_number}`,``,
+    `SPECIES: ${s.scientific_name} (${s.common_name})`,
+    `TIER: ${TIER_LABELS[s.tier]||s.tier}`,
+    `IUCN STATUS: ${s.iucn_category||gt.iucn_category||'Unknown'}`,
+    `MODEL: ${s.model_key}`,`FORMAT: ${cap(s.format)}`,
+    s.tradition?`TRADITION: ${s.tradition}`:null,
+    `TEMPERATURE: ${s.temperature}`,`IMAGE PATH: ${s.image_path}`,``,
+    `GENERATED STORY:`,`---`,s.generated_text,`---`,
+  ].filter(x=>x!==null).join('\n');
+  navigator.clipboard.writeText(text)
+    .then(()=>showToast('Copied — paste into Claude chat'));
+}
+
+function copyImagePath() {
+  navigator.clipboard.writeText(stories[currentIdx]?.image_path||'')
+    .then(()=>showToast('Image path copied'));
+}
+
+// ── Navigation ────────────────────────────────────────────────
+function navigate(dir) {
+  const n = currentIdx+dir;
+  if(n>=0&&n<stories.length) renderStory(n);
+}
+function jumpTo(v) {
+  const i=parseInt(v)-1;
+  if(!isNaN(i)&&i>=0&&i<stories.length) renderStory(i);
+}
+function nextUnannotated() {
+  for(let i=currentIdx+1;i<stories.length;i++)
+    if(!annotations[stories[i].serial_number]){renderStory(i);return;}
+  for(let i=0;i<currentIdx;i++)
+    if(!annotations[stories[i].serial_number]){renderStory(i);return;}
+  showToast('All stories annotated! Great work.');
+}
+
+function updateProgress() {
+  const done=Object.keys(annotations).length;
+  const tot =stories.length;
+  document.getElementById('progress-pill').textContent =
+    `${done} / ${tot}  (${tot>0?Math.round(done/tot*100):0}%)`;
+}
+
+let toastT;
+function showToast(msg) {
+  const t=document.getElementById('toast');
+  t.innerHTML=msg; t.classList.add('show');
+  clearTimeout(toastT);
+  toastT=setTimeout(()=>t.classList.remove('show'),2800);
+}
+
+document.addEventListener('keydown',e=>{
+  if(!stories.length) return;
+  if(['INPUT','TEXTAREA','SELECT'].includes(e.target.tagName)) return;
+  if(e.key==='ArrowRight'||e.key==='d') navigate(1);
+  if(e.key==='ArrowLeft' ||e.key==='a') navigate(-1);
+  if(e.key==='s'&&!e.ctrlKey&&!e.metaKey) saveAnnotation();
+  if(e.key==='n') nextUnannotated();
+});
+
+function cap(s){return s?s.charAt(0).toUpperCase()+s.slice(1):'';}
+
+// Auto-start
+window.addEventListener('load', init);
+</script>
+</body>
+</html>

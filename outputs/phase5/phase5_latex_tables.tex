@@ -1,0 +1,41 @@
+% EcoMyth-VLM — Phase 5 LaTeX Tables
+% Auto-generated — copy into paper
+
+\begin{table}[ht]
+\centering
+\caption{Per-model hallucination metrics across 74,117 generated stories.}
+\label{tab:model_results}
+\begin{tabular}{lcccccc}
+\toprule
+Model & EHR & SHR & EvasionRate & Fleiss-$\kappa$ & EHR$_{0.3}$ & EHR$_{0.7}$ \\
+\midrule
+  Gemma3-12B & 0.5681 & 0.5592 & 0.0222 & 0.488 & 0.5656 & 0.5707 \\
+  Qwen3-VL-8B & 0.5835 & 0.5342 & 0.0216 & 0.573 & 0.5841 & 0.5829 \\
+  Idefics3-8B & 0.5897 & 0.5134 & 0.0250 & 0.456 & 0.5899 & 0.5895 \\
+  Qwen3.5-9B & 0.6024 & 0.6648 & 0.0195 & 0.443 & 0.5997 & 0.6051 \\
+  Qwen2-VL-2B & 0.6063 & 0.6871 & 0.0357 & 0.991 & 0.6069 & 0.6058 \\
+  Qwen2.5-VL-7B & 0.6236 & 0.7037 & 0.0254 & 0.469 & 0.6182 & 0.6291 \\
+  Aya-Vision-8B & 0.6254 & 0.7591 & 0.0186 & 0.558 & 0.6251 & 0.6256 \\
+  LLaVA-Interleave-7B & 0.6275 & 0.6181 & 0.0293 & 0.403 & 0.6208 & 0.6343 \\
+  LLaVA-1.6-Mistral-7B & 0.6533 & 0.7330 & 0.0196 & 0.457 & 0.6473 & 0.6593 \\
+  Gemma4-8B & 0.6668 & 0.7348 & 0.0118 & 0.571 & 0.6648 & 0.6688 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+
+\begin{table}[ht]
+\centering
+\caption{EHR and SHR by narrative format.}
+\label{tab:format_results}
+\begin{tabular}{lcc}
+\toprule
+Format & EHR & SHR \\
+\midrule
+  Childrens & 0.5514 & 0.5783 \\
+  Mythological & 0.6148 & 0.5870 \\
+  Factual & 0.6418 & 0.7298 \\
+  Conservation & 0.6480 & 0.7054 \\
+\bottomrule
+\end{tabular}
+\end{table}

@@ -1,0 +1,1092 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EcoMyth-VLM · Annotation Studio</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=IM+Fell+English:ital@0;1&family=JetBrains+Mono:wght@400;500&display=swap');
+
+  :root {
+    --ink:        #0a0e1a;
+    --ink-soft:   #1c2340;
+    --ink-faint:  #2e3a5c;
+    --rule:       #1e2d4a;
+    --paper:      #f4f1eb;
+    --paper-warm: #ede9e0;
+    --blue:       #1a3a6e;
+    --blue-mid:   #2455a0;
+    --blue-light: #3470c8;
+    --blue-glow:  #5590e8;
+    --gold:       #c89b3c;
+    --gold-light: #e8bc5a;
+    --white:      #ffffff;
+    --success:    #1a6e3a;
+    --warn:       #8b4a00;
+    --correct:    #1a5c3a;
+    --correct-bg: rgba(26,92,58,0.15);
+    --correct-border: rgba(74,222,128,0.3);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Times New Roman', 'Times', serif;
+    background: var(--ink);
+    color: var(--paper);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ── Header ── */
+  header {
+    background: linear-gradient(135deg, var(--ink) 0%, var(--ink-soft) 60%, var(--blue) 100%);
+    border-bottom: 1px solid var(--rule);
+    padding: 14px 28px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky; top: 0; z-index: 100;
+    box-shadow: 0 2px 20px rgba(0,0,0,0.6);
+  }
+
+  .logo {
+    font-family: 'IM Fell English', serif;
+    font-size: 22px;
+    color: var(--gold-light);
+    letter-spacing: 0.03em;
+  }
+  .logo span { color: var(--blue-glow); font-style: italic; }
+
+  .header-controls { display: flex; align-items: center; gap: 14px; }
+
+  .progress-pill {
+    background: var(--ink-faint);
+    border: 1px solid var(--rule);
+    border-radius: 20px;
+    padding: 5px 14px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: var(--blue-glow);
+    letter-spacing: 0.05em;
+  }
+
+  /* ── Load screen ── */
+  #load-screen {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: calc(100vh - 60px);
+    gap: 20px;
+    padding: 40px;
+  }
+
+  .load-title {
+    font-family: 'IM Fell English', serif;
+    font-size: 32px;
+    color: var(--gold-light);
+    text-align: center;
+  }
+
+  .load-subtitle {
+    font-size: 15px;
+    color: var(--paper-warm);
+    text-align: center;
+    max-width: 560px;
+    line-height: 1.75;
+    opacity: 0.85;
+  }
+
+  .server-note {
+    background: rgba(36,85,160,0.15);
+    border: 1px solid rgba(84,144,232,0.3);
+    border-radius: 6px;
+    padding: 14px 20px;
+    max-width: 560px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: var(--blue-glow);
+    line-height: 1.7;
+  }
+
+  .server-note strong { color: var(--gold-light); }
+
+  .load-box {
+    background: var(--ink-soft);
+    border: 1px solid var(--rule);
+    border-radius: 8px;
+    padding: 28px 36px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    width: 100%;
+    max-width: 520px;
+  }
+
+  .file-row { display: flex; flex-direction: column; gap: 6px; }
+
+  .file-label {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--blue-glow);
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  input[type="file"] {
+    background: var(--ink);
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    color: var(--paper);
+    padding: 8px 12px;
+    font-family: 'Times New Roman', serif;
+    font-size: 14px;
+    cursor: pointer;
+    width: 100%;
+  }
+
+  /* ── Buttons ── */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    padding: 9px 20px;
+    border-radius: 5px;
+    border: none;
+    font-family: 'Times New Roman', serif;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    letter-spacing: 0.02em;
+  }
+  .btn-primary {
+    background: linear-gradient(135deg, var(--blue), var(--blue-mid));
+    color: var(--white);
+    box-shadow: 0 2px 12px rgba(36,85,160,0.4);
+  }
+  .btn-primary:hover {
+    background: linear-gradient(135deg, var(--blue-mid), var(--blue-light));
+    transform: translateY(-1px);
+  }
+  .btn-outline {
+    background: transparent;
+    border: 1px solid var(--rule);
+    color: var(--paper-warm);
+    font-size: 13px;
+    padding: 7px 14px;
+  }
+  .btn-outline:hover { border-color: var(--blue-glow); color: var(--blue-glow); }
+
+  .btn-copy {
+    background: var(--ink-faint);
+    border: 1px solid var(--blue);
+    color: var(--blue-glow);
+    font-size: 12px;
+    padding: 6px 14px;
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .btn-copy:hover { background: var(--blue); color: var(--white); }
+
+  .btn-save {
+    background: linear-gradient(135deg, var(--success), #2a8a4a);
+    color: var(--white);
+    box-shadow: 0 2px 12px rgba(26,110,58,0.4);
+    font-size: 15px;
+    padding: 10px 26px;
+  }
+  .btn-save:hover { transform: translateY(-1px); box-shadow: 0 4px 20px rgba(26,110,58,0.6); }
+
+  /* ── Main layout ── */
+  #annotation-screen { display: none; height: calc(100vh - 60px); overflow: hidden; }
+
+  .main-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto auto 1fr auto;
+    height: 100%;
+  }
+
+  /* Meta strip — full width */
+  .meta-strip {
+    grid-column: 1 / -1;
+    background: var(--ink-soft);
+    border-bottom: 1px solid var(--rule);
+    padding: 8px 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  .meta-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    background: var(--ink-faint);
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    padding: 3px 9px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    white-space: nowrap;
+  }
+  .meta-badge .bl { color: var(--blue-glow); text-transform: uppercase; letter-spacing: 0.07em; }
+  .meta-badge .bv { color: var(--paper); }
+
+  .serial-badge {
+    background: linear-gradient(135deg, var(--blue), var(--blue-mid));
+    border-color: var(--blue-light);
+    font-size: 13px;
+    padding: 4px 13px;
+  }
+  .serial-badge .bv { color: var(--white); font-size: 14px; }
+
+  /* ══ GROUND TRUTH PANEL — full width ══ */
+  .gt-panel {
+    grid-column: 1 / -1;
+    background: linear-gradient(135deg, rgba(26,92,58,0.12) 0%, rgba(26,58,110,0.12) 100%);
+    border-bottom: 1px solid rgba(74,222,128,0.2);
+    padding: 10px 20px;
+    display: flex;
+    align-items: flex-start;
+    gap: 0;
+  }
+
+  .gt-header {
+    font-family: 'IM Fell English', serif;
+    font-size: 11px;
+    color: #4ade80;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    white-space: nowrap;
+    margin-right: 16px;
+    padding-top: 3px;
+    opacity: 0.9;
+  }
+
+  .gt-facts {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    flex: 1;
+  }
+
+  .gt-fact {
+    background: rgba(26,92,58,0.2);
+    border: 1px solid rgba(74,222,128,0.2);
+    border-radius: 4px;
+    padding: 4px 10px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    display: flex;
+    gap: 6px;
+    align-items: center;
+  }
+
+  .gt-fact .gk {
+    color: #4ade80;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    font-size: 10px;
+    opacity: 0.8;
+  }
+
+  .gt-fact .gv {
+    color: var(--paper);
+    font-style: normal;
+  }
+
+  .gt-fact.iucn-CR  { border-color: rgba(255,80,80,0.4);  background: rgba(255,80,80,0.1); }
+  .gt-fact.iucn-CR  .gk { color: #ff9090; }
+  .gt-fact.iucn-EN  { border-color: rgba(255,140,0,0.4);  background: rgba(255,140,0,0.1); }
+  .gt-fact.iucn-EN  .gk { color: #ffa040; }
+  .gt-fact.iucn-VU  { border-color: rgba(255,200,0,0.4);  background: rgba(255,200,0,0.1); }
+  .gt-fact.iucn-VU  .gk { color: #ffd040; }
+  .gt-fact.iucn-NT  { border-color: rgba(100,200,100,0.4); background: rgba(100,200,100,0.1); }
+  .gt-fact.iucn-NT  .gk { color: #80d080; }
+  .gt-fact.iucn-LC  { border-color: rgba(74,222,128,0.4); background: rgba(74,222,128,0.1); }
+  .gt-fact.iucn-LC  .gk { color: #4ade80; }
+
+  /* Left panel — image */
+  .panel-image {
+    border-right: 1px solid var(--rule);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    background: var(--ink);
+  }
+
+  .panel-header {
+    padding: 9px 16px;
+    border-bottom: 1px solid var(--rule);
+    font-family: 'IM Fell English', serif;
+    font-size: 12px;
+    color: var(--gold);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    background: var(--ink-soft);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-shrink: 0;
+  }
+
+  .image-container {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+    overflow: hidden;
+  }
+
+  #story-image {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    border-radius: 4px;
+    box-shadow: 0 8px 40px rgba(0,0,0,0.6);
+    border: 1px solid var(--rule);
+  }
+
+  .image-placeholder {
+    border: 2px dashed var(--rule);
+    border-radius: 8px;
+    padding: 40px 30px;
+    text-align: center;
+    color: var(--ink-faint);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    line-height: 1.7;
+  }
+
+  .image-actions {
+    padding: 10px 14px;
+    border-top: 1px solid var(--rule);
+    display: flex;
+    gap: 8px;
+    background: var(--ink-soft);
+    flex-shrink: 0;
+  }
+
+  /* Right panel */
+  .panel-right {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    background: var(--ink);
+  }
+
+  .story-section {
+    flex: 0 0 38%;
+    overflow-y: auto;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .story-text {
+    padding: 14px 18px;
+    font-size: 14px;
+    line-height: 1.85;
+    color: var(--paper-warm);
+    font-style: italic;
+  }
+
+  .ratings-section {
+    flex: 1;
+    overflow-y: auto;
+    padding: 14px 18px;
+  }
+
+  .ratings-title {
+    font-family: 'IM Fell English', serif;
+    font-size: 13px;
+    color: var(--gold);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    margin-bottom: 12px;
+    padding-bottom: 7px;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .rating-row {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    margin-bottom: 13px;
+  }
+
+  .rating-label-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .rating-label { font-size: 13px; color: var(--paper); }
+
+  .rating-value {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 14px;
+    color: var(--gold-light);
+    font-weight: 500;
+    min-width: 22px;
+    text-align: right;
+  }
+
+  /* rating hint — shows ground truth inline */
+  .rating-hint {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: #4ade80;
+    opacity: 0.75;
+    padding: 2px 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  input[type="range"] {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    height: 5px;
+    background: var(--rule);
+    border-radius: 3px;
+    cursor: pointer;
+  }
+  input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 17px;
+    height: 17px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--blue-light), var(--blue-glow));
+    border: 2px solid var(--white);
+    box-shadow: 0 2px 8px rgba(84,144,232,0.5);
+    cursor: pointer;
+    transition: transform 0.1s;
+  }
+  input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.2); }
+
+  .slider-marks {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 2px;
+  }
+  .slider-mark {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    color: var(--ink-faint);
+  }
+
+  .save-bar {
+    padding: 10px 16px;
+    background: var(--ink-soft);
+    border-top: 1px solid var(--rule);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+  }
+
+  .save-status {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    padding: 4px 12px;
+    border-radius: 3px;
+  }
+  .save-status.saved {
+    color: #4ade80;
+    background: rgba(74,222,128,0.08);
+    border: 1px solid rgba(74,222,128,0.2);
+  }
+  .save-status.unsaved {
+    color: var(--gold);
+    background: rgba(200,155,60,0.08);
+    border: 1px solid rgba(200,155,60,0.2);
+  }
+
+  .nav-controls {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    padding-left: 12px;
+    border-left: 1px solid var(--rule);
+    margin-left: auto;
+  }
+
+  .nav-input {
+    background: var(--ink);
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    color: var(--paper);
+    padding: 5px 8px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    width: 58px;
+    text-align: center;
+  }
+
+  /* Save bar row 2 — bottom of screen */
+  .save-bar-row2 {
+    grid-column: 1 / -1;
+    padding: 8px 18px;
+    background: var(--ink);
+    border-top: 1px solid var(--rule);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+  }
+
+  /* ── Toast ── */
+  #toast {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    background: var(--ink-soft);
+    border: 1px solid var(--blue);
+    border-radius: 6px;
+    padding: 11px 18px;
+    font-size: 13px;
+    color: var(--blue-glow);
+    box-shadow: 0 8px 30px rgba(0,0,0,0.5);
+    opacity: 0;
+    transform: translateY(12px);
+    transition: all 0.25s ease;
+    z-index: 999;
+    pointer-events: none;
+  }
+  #toast.show { opacity: 1; transform: translateY(0); }
+
+  ::-webkit-scrollbar { width: 5px; }
+  ::-webkit-scrollbar-track { background: var(--ink); }
+  ::-webkit-scrollbar-thumb { background: var(--rule); border-radius: 3px; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">EcoMyth<span>-VLM</span> · Annotation Studio</div>
+  <div class="header-controls">
+    <div class="progress-pill" id="progress-pill">No file loaded</div>
+    <button class="btn btn-outline" onclick="exportCSV()" id="export-btn" style="display:none">Export CSV</button>
+  </div>
+</header>
+
+<!-- ── Load Screen ── -->
+<div id="load-screen">
+  <div class="load-title">Annotation Studio</div>
+
+  <div class="server-note">
+    <strong>⚠ Run a local server to display images:</strong><br>
+    1. Open terminal in your project root (where <code>outputs/</code> is)<br>
+    2. Run: <code>python -m http.server 8080</code><br>
+    3. Open: <code>http://localhost:8080/EcoMyth_Phase6_AnnotationTool.html</code>
+  </div>
+
+  <div class="load-subtitle">
+    Load the stories JSON and the ground truth JSON to begin.<br>
+    Ground truth facts will be shown above each story for fast verification.
+  </div>
+
+  <div class="load-box">
+    <div class="file-row">
+      <span class="file-label">Stories JSON — phase6_annotation_stories.json</span>
+      <input type="file" id="stories-file" accept=".json">
+    </div>
+    <div class="file-row">
+      <span class="file-label">Ground Truth JSON — species_ground_truth.json</span>
+      <input type="file" id="gt-file" accept=".json">
+    </div>
+    <div class="file-row">
+      <span class="file-label">Existing Annotations CSV (optional — to resume)</span>
+      <input type="file" id="annotations-file" accept=".csv">
+    </div>
+    <button class="btn btn-primary" onclick="loadFiles()" style="margin-top:8px">
+      Load and Begin Annotation
+    </button>
+  </div>
+</div>
+
+<!-- ── Annotation Screen ── -->
+<div id="annotation-screen">
+  <div class="main-layout">
+
+    <!-- Row 1: metadata badges -->
+    <div class="meta-strip" id="meta-strip"></div>
+
+    <!-- Row 2: ground truth facts -->
+    <div class="gt-panel" id="gt-panel">
+      <div class="gt-header">✓ Ground Truth</div>
+      <div class="gt-facts" id="gt-facts">Loading...</div>
+    </div>
+
+    <!-- Row 3L: image -->
+    <div class="panel-image">
+      <div class="panel-header">
+        <span>Wildlife Image</span>
+        <span id="tier-badge" style="font-size:11px; color:var(--paper-warm)"></span>
+      </div>
+      <div class="image-container" id="image-container">
+        <div class="image-placeholder">Image loading...</div>
+      </div>
+      <div class="image-actions">
+        <button class="btn btn-copy" onclick="copyForClaude()">⎘ Copy for Claude</button>
+        <button class="btn btn-copy" onclick="copyImagePath()">📂 Image Path</button>
+      </div>
+    </div>
+
+    <!-- Row 3R: story + ratings -->
+    <div class="panel-right">
+      <div class="panel-header" style="background:var(--ink-soft)">
+        <span>Generated Story</span>
+        <span id="story-meta" style="font-size:11px;color:var(--paper-warm)"></span>
+      </div>
+
+      <div class="story-section">
+        <div class="story-text" id="story-text">Loading...</div>
+      </div>
+
+      <div class="ratings-section">
+        <div class="ratings-title">Rate Ecological Accuracy (1 = Wrong · 5 = Correct)</div>
+
+        <!-- Rating rows injected by JS so hints can be dynamic -->
+        <div id="rating-rows"></div>
+
+        <div style="margin-top:6px">
+          <div style="font-size:11px;color:var(--blue-glow);margin-bottom:5px;
+                      font-family:'JetBrains Mono',monospace;text-transform:uppercase;
+                      letter-spacing:0.1em">Notes (optional)</div>
+          <textarea id="r-notes" rows="2"
+            style="width:100%;background:var(--ink);border:1px solid var(--rule);
+                   border-radius:4px;color:var(--paper);padding:8px;font-size:13px;
+                   font-family:'Times New Roman',serif;resize:vertical;line-height:1.5">
+          </textarea>
+        </div>
+      </div>
+
+      <div class="save-bar">
+        <button class="btn btn-save" onclick="saveAnnotation()">✓ Save Rating</button>
+        <div class="save-status unsaved" id="save-status">Unsaved</div>
+        <div style="width:1px;height:22px;background:var(--rule)"></div>
+        <div class="nav-controls">
+          <button class="btn btn-outline" onclick="navigate(-1)">← Prev</button>
+          <input type="number" class="nav-input" id="nav-input"
+            onchange="jumpTo(this.value)" min="1">
+          <span style="font-size:11px;color:var(--paper-warm);
+                       font-family:'JetBrains Mono',monospace">
+            / <span id="total-count">0</span>
+          </span>
+          <button class="btn btn-outline" onclick="navigate(1)">Next →</button>
+          <button class="btn btn-outline"
+            onclick="nextUnannotated()"
+            style="font-size:11px;padding:6px 10px">Next Unannotated</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+let stories       = [];
+let groundTruth   = {};   // scientific_name → GT object
+let annotations   = {};   // serial_number   → annotation
+let currentIdx    = 0;
+
+const IUCN_FULL = {
+  CR:'Critically Endangered', EN:'Endangered', VU:'Vulnerable',
+  NT:'Near Threatened', LC:'Least Concern'
+};
+const TIER_LABELS = {
+  1:'Tier 1 — Iconic',2:'Tier 2 — Regional',
+  3:'Tier 3 — Rare/CR',4:'Tier 4 — Confusable'
+};
+
+// ── Load files ────────────────────────────────────────────────
+async function loadFiles() {
+  const sFile  = document.getElementById('stories-file').files[0];
+  const gtFile = document.getElementById('gt-file').files[0];
+  const aFile  = document.getElementById('annotations-file').files[0];
+
+  if (!sFile) { showToast('Please select a Stories JSON file'); return; }
+
+  try {
+    stories = JSON.parse(await readFile(sFile));
+  } catch(e) { showToast('Stories JSON parse error: ' + e.message); return; }
+
+  if (gtFile) {
+    try {
+      groundTruth = JSON.parse(await readFile(gtFile));
+    } catch(e) { showToast('GT JSON parse error: ' + e.message); }
+  }
+
+  if (aFile) {
+    parseCSV(await readFile(aFile));
+    showToast(`Resumed: ${Object.keys(annotations).length} existing annotations loaded`);
+  }
+
+  document.getElementById('load-screen').style.display = 'none';
+  document.getElementById('annotation-screen').style.display = 'block';
+  document.getElementById('export-btn').style.display = 'inline-flex';
+  document.getElementById('total-count').textContent  = stories.length;
+
+  buildRatingRows();
+
+  const firstNew = stories.findIndex(s => !annotations[s.serial_number]);
+  renderStory(firstNew >= 0 ? firstNew : 0);
+}
+
+function readFile(f) {
+  return new Promise((res, rej) => {
+    const r = new FileReader();
+    r.onload  = e => res(e.target.result);
+    r.onerror = () => rej(new Error('Read failed'));
+    r.readAsText(f, 'utf-8');
+  });
+}
+
+// ── Build rating rows with hints ──────────────────────────────
+const RATING_DEFS = [
+  { key:'species', label:'1. Species Identification Accuracy',
+    hintKey:'species' },
+  { key:'habitat', label:'2. Habitat Accuracy',
+    hintKey:'habitat' },
+  { key:'diet',    label:'3. Diet Accuracy',
+    hintKey:'diet' },
+  { key:'iucn',    label:'4. IUCN Conservation Status Accuracy',
+    hintKey:'iucn' },
+  { key:'overall', label:'5. Overall Ecological Accuracy',
+    hintKey:'overall' },
+];
+
+function buildRatingRows() {
+  const container = document.getElementById('rating-rows');
+  container.innerHTML = RATING_DEFS.map(def => `
+    <div class="rating-row">
+      <div class="rating-label-row">
+        <span class="rating-label">${def.label}</span>
+        <span class="rating-value" id="val-${def.key}">3</span>
+      </div>
+      <div class="rating-hint" id="hint-${def.key}"></div>
+      <input type="range" min="1" max="5" step="1" value="3" id="r-${def.key}"
+        oninput="updateSlider('${def.key}')">
+      <div class="slider-marks">
+        <span class="slider-mark">1 Wrong</span>
+        <span class="slider-mark">2</span>
+        <span class="slider-mark">3 OK</span>
+        <span class="slider-mark">4</span>
+        <span class="slider-mark">5 Correct</span>
+      </div>
+    </div>
+  `).join('');
+}
+
+// ── Render story ──────────────────────────────────────────────
+function renderStory(idx) {
+  if (idx < 0 || idx >= stories.length) return;
+  currentIdx = idx;
+  const s  = stories[idx];
+  const gt = groundTruth[s.scientific_name] || {};
+
+  // ── Meta badges ───────────────────────────────────────────
+  const fmtColors = {factual:'#3470c8',childrens:'#1a6e3a',
+                     mythological:'#8b4a00',conservation:'#6e1a3a'};
+  const fc = fmtColors[s.format] || '#3470c8';
+
+  document.getElementById('meta-strip').innerHTML = `
+    <div class="meta-badge serial-badge">
+      <span class="bl">Serial</span>
+      <span class="bv">${s.serial_number}</span>
+    </div>
+    <div class="meta-badge">
+      <span class="bl">Species</span>
+      <span class="bv">${s.common_name || s.scientific_name}</span>
+    </div>
+    <div class="meta-badge">
+      <span class="bl">Scientific</span>
+      <span class="bv" style="font-style:italic">${s.scientific_name}</span>
+    </div>
+    <div class="meta-badge" style="border-color:${fc}50">
+      <span class="bl" style="color:${fc}">Format</span>
+      <span class="bv">${cap(s.format)}</span>
+    </div>
+    ${s.tradition ? `<div class="meta-badge">
+      <span class="bl">Tradition</span>
+      <span class="bv">${s.tradition}</span></div>` : ''}
+    <div class="meta-badge">
+      <span class="bl">Model</span>
+      <span class="bv">${s.model_key}</span>
+    </div>
+    <div class="meta-badge">
+      <span class="bl">Temp</span>
+      <span class="bv">${s.temperature}</span>
+    </div>
+    <div class="meta-badge">
+      <span class="bl">${TIER_LABELS[s.tier]||'Tier '+s.tier}</span>
+      <span class="bv">Resp #${s.response_idx+1}</span>
+    </div>
+  `;
+
+  // ── Ground truth panel ────────────────────────────────────
+  const iucnCat   = s.iucn_category || gt.iucn_category || '?';
+  const iucnFull  = IUCN_FULL[iucnCat] || iucnCat;
+  const trend     = gt.population_trend || '?';
+  const family    = gt.taxonomy_family  || '?';
+  const habitats  = (gt.habitat_keywords||[]).slice(0,5).join(', ') || '?';
+  const diets     = (gt.diet_keywords||[]).slice(0,5).join(', ')    || '?';
+  const ranges    = (gt.range_countries||[]).slice(0,4).join(', ')  || '?';
+
+  document.getElementById('gt-facts').innerHTML = `
+    <div class="gt-fact">
+      <span class="gk">Species</span>
+      <span class="gv">${s.scientific_name} · ${s.common_name||''}
+        · Family ${family}</span>
+    </div>
+    <div class="gt-fact iucn-${iucnCat}">
+      <span class="gk">IUCN</span>
+      <span class="gv">${iucnFull} (${iucnCat})</span>
+    </div>
+    <div class="gt-fact">
+      <span class="gk">Population</span>
+      <span class="gv">${cap(trend)}</span>
+    </div>
+    <div class="gt-fact">
+      <span class="gk">Habitat</span>
+      <span class="gv">${habitats}</span>
+    </div>
+    <div class="gt-fact">
+      <span class="gk">Diet</span>
+      <span class="gv">${diets}</span>
+    </div>
+    <div class="gt-fact">
+      <span class="gk">Range</span>
+      <span class="gv">${ranges}</span>
+    </div>
+  `;
+
+  // ── Inline hints per rating ───────────────────────────────
+  const hints = {
+    species: `Correct: ${s.scientific_name} (${s.common_name}) · Family: ${family}`,
+    habitat: `Correct habitats: ${habitats}`,
+    diet:    `Correct diet items: ${diets}`,
+    iucn:    `Correct status: ${iucnFull} (${iucnCat}) · Trend: ${cap(trend)}`,
+    overall: `All facts above should be reflected in the story`,
+  };
+
+  RATING_DEFS.forEach(def => {
+    const el = document.getElementById('hint-' + def.key);
+    if (el) el.textContent = '✓ ' + (hints[def.hintKey] || '');
+  });
+
+  // ── Story text ────────────────────────────────────────────
+  document.getElementById('story-text').textContent =
+    s.generated_text || '(No text)';
+  document.getElementById('story-meta').textContent =
+    `${s.model_label||s.model_key} · ${cap(s.format)}`;
+  document.getElementById('tier-badge').textContent =
+    TIER_LABELS[s.tier] || '';
+
+  // ── Image ─────────────────────────────────────────────────
+  const cont = document.getElementById('image-container');
+  if (s.image_path) {
+    cont.innerHTML = `<img id="story-image" src="${s.image_path}"
+      onerror="this.parentElement.innerHTML='<div class=image-placeholder>Image not found<br><small>${s.image_path}</small><br><br>Run:<br>python -m http.server 8080</div>'"
+      alt="${s.scientific_name}" style="max-width:100%;max-height:100%;object-fit:contain;
+      border-radius:4px;box-shadow:0 8px 40px rgba(0,0,0,0.6);border:1px solid var(--rule)">`;
+  } else {
+    cont.innerHTML = '<div class="image-placeholder">No image path in data</div>';
+  }
+
+  // ── Load existing annotation ──────────────────────────────
+  const ex = annotations[s.serial_number];
+  RATING_DEFS.forEach(d => {
+    const el = document.getElementById('r-' + d.key);
+    if (el) { el.value = ex ? (ex['r_'+d.key] || 3) : 3; updateSlider(d.key); }
+  });
+  document.getElementById('r-notes').value = ex ? (ex.notes||'') : '';
+
+  const st = document.getElementById('save-status');
+  if (ex) {
+    st.textContent = `Saved · ${ex.saved_at||'—'}`;
+    st.className   = 'save-status saved';
+  } else {
+    st.textContent = 'Unsaved';
+    st.className   = 'save-status unsaved';
+  }
+
+  document.getElementById('nav-input').value = idx + 1;
+  updateProgress();
+}
+
+// ── Slider ────────────────────────────────────────────────────
+function updateSlider(key) {
+  const v = document.getElementById('r-' + key)?.value;
+  if (v) document.getElementById('val-' + key).textContent = v;
+}
+
+// ── Save ──────────────────────────────────────────────────────
+function saveAnnotation() {
+  const s = stories[currentIdx];
+  const anno = {
+    serial_number:   s.serial_number,
+    manifest_id:     s.manifest_id,
+    scientific_name: s.scientific_name,
+    common_name:     s.common_name,
+    tier:            s.tier,
+    model_key:       s.model_key,
+    format:          s.format,
+    tradition:       s.tradition || '',
+    temperature:     s.temperature,
+    response_idx:    s.response_idx,
+    pool:            s.pool || '',
+    r_species:  parseInt(document.getElementById('r-species').value),
+    r_habitat:  parseInt(document.getElementById('r-habitat').value),
+    r_diet:     parseInt(document.getElementById('r-diet').value),
+    r_iucn:     parseInt(document.getElementById('r-iucn').value),
+    r_overall:  parseInt(document.getElementById('r-overall').value),
+    notes:      document.getElementById('r-notes').value.trim(),
+    saved_at:   new Date().toISOString().slice(0,19).replace('T',' '),
+  };
+
+  annotations[s.serial_number] = anno;
+
+  const st = document.getElementById('save-status');
+  st.textContent = `Saved · ${anno.saved_at}`;
+  st.className   = 'save-status saved';
+
+  showToast(`✓ ${s.serial_number} saved`);
+  updateProgress();
+}
+
+// ── Export CSV ────────────────────────────────────────────────
+function exportCSV() {
+  const cols = [
+    'serial_number','manifest_id','scientific_name','common_name',
+    'tier','model_key','format','tradition','temperature','response_idx','pool',
+    'r_species','r_habitat','r_diet','r_iucn','r_overall','notes','saved_at',
+  ];
+  let csv = cols.join(',') + '\n';
+  Object.values(annotations).forEach(a => {
+    const row = cols.map(c => {
+      const v = String(a[c] !== undefined ? a[c] : '');
+      return (v.includes(',') || v.includes('"') || v.includes('\n'))
+        ? '"' + v.replace(/"/g,'""') + '"' : v;
+    });
+    csv += row.join(',') + '\n';
+  });
+  const blob = new Blob([csv], {type:'text/csv;charset=utf-8;'});
+  const url  = URL.createObjectURL(blob);
+  const a    = document.createElement('a');
+  a.href = url;
+  a.download = `phase6_annotations_${new Date().toISOString().slice(0,10)}.csv`;
+  a.click();
+  URL.revokeObjectURL(url);
+  showToast(`Exported ${Object.keys(annotations).length} annotations`);
+}
+
+// ── Copy for Claude ───────────────────────────────────────────
+function copyForClaude() {
+  const s  = stories[currentIdx];
+  const gt = groundTruth[s.scientific_name] || {};
+  const text = [
+    `SERIAL: ${s.serial_number}`,
+    ``,
+    `SPECIES: ${s.scientific_name} (${s.common_name})`,
+    `TIER: ${TIER_LABELS[s.tier]||s.tier}`,
+    `IUCN STATUS: ${s.iucn_category || gt.iucn_category || 'Unknown'}`,
+    `MODEL: ${s.model_key}`,
+    `FORMAT: ${cap(s.format)}`,
+    s.tradition ? `TRADITION: ${s.tradition}` : null,
+    `TEMPERATURE: ${s.temperature}`,
+    `IMAGE PATH: ${s.image_path}`,
+    ``,
+    `GENERATED STORY:`,
+    `---`,
+    s.generated_text,
+    `---`,
+  ].filter(x => x !== null).join('\n');
+  navigator.clipboard.writeText(text)
+    .then(() => showToast('Copied — paste into Claude chat'));
+}
+
+function copyImagePath() {
+  navigator.clipboard.writeText(stories[currentIdx]?.image_path || '')
+    .then(() => showToast('Image path copied'));
+}
+
+// ── Navigation ────────────────────────────────────────────────
+function navigate(dir) {
+  const n = currentIdx + dir;
+  if (n >= 0 && n < stories.length) renderStory(n);
+}
+function jumpTo(v) {
+  const i = parseInt(v) - 1;
+  if (!isNaN(i) && i >= 0 && i < stories.length) renderStory(i);
+}
+function nextUnannotated() {
+  for (let i = currentIdx+1; i < stories.length; i++)
+    if (!annotations[stories[i].serial_number]) { renderStory(i); return; }
+  for (let i = 0; i < currentIdx; i++)
+    if (!annotations[stories[i].serial_number]) { renderStory(i); return; }
+  showToast('All stories annotated! 🎉');
+}
+
+// ── Progress ──────────────────────────────────────────────────
+function updateProgress() {
+  const done = Object.keys(annotations).length;
+  const tot  = stories.length;
+  document.getElementById('progress-pill').textContent =
+    `${done} / ${tot}  (${tot>0?Math.round(done/tot*100):0}%)`;
+}
+
+// ── CSV resume parser ─────────────────────────────────────────
+function parseCSV(text) {
+  const lines = text.trim().split('\n');
+  if (lines.length < 2) return;
+  const headers = lines[0].split(',').map(h => h.trim().replace(/^"|"$/g,''));
+  for (let i = 1; i < lines.length; i++) {
+    const vals = parseCSVLine(lines[i]);
+    if (!vals.length) continue;
+    const obj = {};
+    headers.forEach((h,j) => obj[h] = (vals[j]||'').replace(/^"|"$/g,''));
+    if (obj.serial_number) annotations[obj.serial_number] = obj;
+  }
+}
+function parseCSVLine(line) {
+  const out = []; let cur = '', inQ = false;
+  for (const ch of line) {
+    if (ch==='"') inQ=!inQ;
+    else if (ch===',' && !inQ) { out.push(cur); cur=''; }
+    else cur+=ch;
+  }
+  out.push(cur); return out;
+}
+
+// ── Toast ─────────────────────────────────────────────────────
+let toastT;
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  clearTimeout(toastT);
+  toastT = setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+// ── Keyboard shortcuts ────────────────────────────────────────
+document.addEventListener('keydown', e => {
+  if (!stories.length) return;
+  if (['INPUT','TEXTAREA','SELECT'].includes(e.target.tagName)) return;
+  if (e.key==='ArrowRight'||e.key==='d') navigate(1);
+  if (e.key==='ArrowLeft' ||e.key==='a') navigate(-1);
+  if (e.key==='s' && !e.ctrlKey && !e.metaKey) saveAnnotation();
+  if (e.key==='n') nextUnannotated();
+});
+
+// ── Helper ────────────────────────────────────────────────────
+function cap(s) { return s ? s.charAt(0).toUpperCase()+s.slice(1) : ''; }
+</script>
+</body>
+</html>

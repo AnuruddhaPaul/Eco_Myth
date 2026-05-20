@@ -1,0 +1,101 @@
+serial_number,manifest_id,scientific_name,common_name,tier,model_key,format,tradition,temperature,response_idx,pool,r_species,r_habitat,r_diet,r_iucn,r_overall,notes,saved_at
+S0286,GBIF_Panthera_pardus_orientalis_02,Panthera pardus orientalis,Amur leopard,3,idefics3,mythological,West African (Yoruba),0.7,1,forced_ehr_high,1,1,1,1,1,,2026-05-18 12:19:09
+S0138,iNat_Haliaeetus_leucocephalus_04,Haliaeetus leucocephalus,Bald eagle,4,qwen35_9b,childrens,,0.7,0,forced_evasion,3,3,3,3,3,,2026-05-18 12:21:12
+S0098,GBIF_Ursus_arctos_02,Ursus arctos,Grizzly bear,4,ayavision,conservation,,0.7,2,forced_shr1,3,3,3,3,3,,2026-05-18 12:21:14
+S0416,iNat_Strigops_habroptila_03,Strigops habroptila,Kakapo,3,idefics3,childrens,,0.7,0,forced_evasion,1,1,1,1,1,,2026-05-18 12:22:32
+S0106,iNat_Ursus_americanus_02,Ursus americanus,American black bear,4,llava_interleave,mythological,West African (Yoruba),0.3,0,forced_shr1,4.3,3.8,3.4,1,3.6,,2026-05-18 12:26:21
+S0158,iNat_Acinonyx_jubatus_02,Acinonyx jubatus,Cheetah,4,idefics3,factual,,0.7,1,forced_ehr_high,5,5,5,5,5,,2026-05-18 12:27:18
+S0356,iNat_Giraffa_camelopardalis_00,Giraffa camelopardalis,Giraffe,1,gemma3,childrens,,0.7,2,forced_ehr0,5,5,5,2.4,4.4,,2026-05-18 12:28:45
+S0036,iNat_Ambystoma_mexicanum_01,Ambystoma mexicanum,Axolotl,2,ayavision,childrens,,0.3,1,forced_evasion,4.5,3.9,5,1.4,4.2,,2026-05-18 12:30:11
+S0148,iNat_Panthera_pardus_orientalis_00,Panthera pardus orientalis,Amur leopard,3,qwen25vl,factual,,0.3,0,stratified_random,5,5,5,5,5,,2026-05-18 12:30:35
+S0220,GBIF_Panthera_pardus_orientalis_02,Panthera pardus orientalis,Amur leopard,3,idefics3,factual,,0.3,2,forced_ehr_high,1,1,1,1,1,,2026-05-18 12:31:08
+S0068,GBIF_Panthera_onca_01,Panthera onca,Jaguar,1,gemma3,mythological,East Asian (Chinese/Japanese),0.7,1,forced_evasion,4.2,5,3.6,1.5,3.6,,2026-05-18 12:31:43
+S0398,iNat_Panthera_onca_03,Panthera onca,Jaguar,1,llava_interleave,childrens,,0.3,0,stratified_random,5,4.4,4.1,1,3.7,,2026-05-18 12:32:25
+S0390,iNat_Hydrochoerus_hydrochaeris_02,Hydrochoerus hydrochaeris,Capybara,2,gemma4_8b,childrens,,0.3,0,forced_evasion,1.1,1,1,1,1,,2026-05-18 12:33:08
+S0013,GBIF_Equus_quagga_01,Equus quagga,Plains zebra,1,idefics3,mythological,East Asian (Chinese/Japanese),0.3,1,forced_shr1,4,5,5,1,3.7,,2026-05-18 15:28:21
+S0310,GBIF_Loxodonta_africana_01,Loxodonta africana,African elephant,4,qwen25vl,childrens,,0.3,0,forced_ehr0,3.3,3.3,2.9,1,3.6,,2026-05-18 15:29:07
+S0485,iNat_Strigops_habroptila_04,Strigops habroptila,Kakapo,3,qwen25vl,mythological,West African (Yoruba),0.7,1,forced_shr1,5,5,5,4.4,5,,2026-05-18 15:30:04
+S0074,GBIF_Addax_nasomaculatus_02,Addax nasomaculatus,Addax,3,ayavision,childrens,,0.7,1,forced_evasion,1,1,1,1,1,,2026-05-18 15:30:28
+S0003,GBIF_Probosciger_aterrimus_02,Probosciger aterrimus,Palm cockatoo,2,llava_interleave,mythological,Hindu,0.3,1,forced_shr1,1,1,1,1,1,,2026-05-18 15:31:08
+S0445,iNat_Probosciger_aterrimus_01,Probosciger aterrimus,Palm cockatoo,2,qwen2vl2b,childrens,,0.7,0,stratified_random,2.6,1.1,1,1,1,,2026-05-18 15:32:51
+S0092,iNat_Pseudoryx_nghetinhensis_00,Pseudoryx nghetinhensis,Saola,3,llava_interleave,conservation,,0.3,0,forced_ehr_high,1,1,1,1,1,,2026-05-18 15:33:32
+S0385,iNat_Addax_nasomaculatus_03,Addax nasomaculatus,Addax,3,ayavision,conservation,,0.7,2,forced_shr1,1,1,3,1,1,,2026-05-18 15:34:17
+S0440,GBIF_Panthera_pardus_orientalis_01,Panthera pardus orientalis,Amur leopard,3,gemma4_8b,childrens,,0.7,1,stratified_random,3,3.5,3.4,1,2.1,,2026-05-18 15:35:10
+S0025,GBIF_Panthera_onca_02,Panthera onca,Jaguar,1,gemma3,conservation,,0.7,0,forced_shr1,1,1,1,1,1,,2026-05-18 15:35:31
+S0396,iNat_Addax_nasomaculatus_03,Addax nasomaculatus,Addax,3,llava16,conservation,,0.7,2,stratified_random,1.3,1.6,1.8,1,1.7,,2026-05-18 15:37:05
+S0489,iNat_Addax_nasomaculatus_04,Addax nasomaculatus,Addax,3,qwen35_9b,factual,,0.7,1,forced_shr1,1,1,1,1,1,,2026-05-18 15:37:41
+S0500,iNat_Hippopotamus_amphibius_02,Hippopotamus amphibius,Hippopotamus,1,qwen35_9b,mythological,East Asian (Chinese/Japanese),0.7,2,forced_evasion,4.9,3.7,4.5,5,4.6,,2026-05-18 15:39:00
+S0267,GBIF_Gorilla_beringei_beringei_00,Gorilla beringei beringei,Mountain gorilla,3,qwen3vl8b,conservation,,0.3,2,forced_shr1,5,5,1,5,4.7,,2026-05-18 15:39:46
+S0222,iNat_Ambystoma_mexicanum_04,Ambystoma mexicanum,Axolotl,2,gemma4_8b,factual,,0.7,0,forced_shr1,1,1,1,1,1,,2026-05-18 15:40:27
+S0117,GBIF_Balaenoptera_musculus_00,Balaenoptera musculus,Blue whale,3,llava_interleave,factual,,0.3,0,forced_shr1,3.8,3.9,2.3,1,3.4,,2026-05-18 15:41:13
+S0067,iNat_Ambystoma_mexicanum_04,Ambystoma mexicanum,Axolotl,2,ayavision,conservation,,0.7,0,forced_shr1,1,1,1,1,1,,2026-05-18 15:41:42
+S0174,iNat_Panthera_leo_02,Panthera leo,African lion,1,gemma4_8b,childrens,,0.3,2,forced_ehr0,3.5,4.5,1,1,3.1,,2026-05-18 15:44:05
+S0348,GBIF_Panthera_pardus_orientalis_02,Panthera pardus orientalis,Amur leopard,3,gemma3,mythological,West African (Yoruba),0.3,2,forced_ehr_high,1,1,1,1,1,,2026-05-18 15:44:24
+S0020,iNat_Ambystoma_mexicanum_01,Ambystoma mexicanum,Axolotl,2,ayavision,mythological,West African (Yoruba),0.7,0,forced_shr1,5,1,3,1,3.6,,2026-05-18 15:44:53
+S0086,GBIF_Arctictis_binturong_00,Arctictis binturong,Binturong,2,gemma3,childrens,,0.7,1,forced_shr1,1,1,1,1,1,,2026-05-18 15:45:15
+S0285,GBIF_Panthera_tigris_tigris_01,Panthera tigris tigris,Bengal tiger,1,idefics3,childrens,,0.7,0,forced_ehr0,4.1,3.5,4,1,3,,2026-05-18 15:46:22
+S0341,GBIF_Ambystoma_mexicanum_01,Ambystoma mexicanum,Axolotl,2,qwen35_9b,factual,,0.3,1,forced_evasion,1,1,1,1,1,,2026-05-18 15:46:43
+S0150,iNat_Equus_quagga_04,Equus quagga,Plains zebra,1,qwen25vl,conservation,,0.7,0,forced_shr1,1,1,1,1,1,,2026-05-18 15:47:00
+S0135,GBIF_Giraffa_camelopardalis_01,Giraffa camelopardalis,Giraffe,1,idefics3,conservation,,0.3,2,forced_ehr0,4.1,4.6,4,5,3.6,,2026-05-18 15:47:19
+S0433,iNat_Ailurus_fulgens_03,Ailurus fulgens,Red panda,2,qwen3vl8b,childrens,,0.7,0,stratified_random,5,5,3.6,1,4.3,,2026-05-18 15:47:48
+S0417,iNat_Diceros_bicornis_04,Diceros bicornis,Black rhino,3,gemma4_8b,factual,,0.3,2,forced_shr1,1,1,1,1,1,,2026-05-18 15:48:08
+S0313,iNat_Alligator_mississippiensis_01,Alligator mississippiensis,American alligator,4,llava16,mythological,Hindu,0.3,1,forced_shr1,1,1,1,1,1,,2026-05-18 15:48:27
+S0206,iNat_Balaenoptera_musculus_04,Balaenoptera musculus,Blue whale,3,llava16,factual,,0.7,2,forced_shr1,5,4.4,3.5,5,4.1,,2026-05-18 15:48:51
+S0076,iNat_Acinonyx_jubatus_02,Acinonyx jubatus,Cheetah,4,llava_interleave,childrens,,0.7,0,forced_shr1,1,1,1,1,1,,2026-05-18 15:49:11
+S0371,GBIF_Diceros_bicornis_02,Diceros bicornis,Black rhino,3,ayavision,mythological,Ancient Greek,0.7,0,forced_evasion,3.7,4.4,3.6,1,4.2,,2026-05-18 16:02:24
+S0387,iNat_Aquila_chrysaetos_01,Aquila chrysaetos,Golden eagle,4,qwen3vl8b,childrens,,0.7,1,stratified_random,5,5,5,1,3.9,,2026-05-18 16:02:52
+S0078,iNat_Diceros_bicornis_01,Diceros bicornis,Black rhino,3,qwen35_9b,conservation,,0.3,2,forced_shr1,5,5,5,5,5,,2026-05-18 16:03:09
+S0095,iNat_Ambystoma_mexicanum_04,Ambystoma mexicanum,Axolotl,2,llava16,conservation,,0.7,0,forced_shr1,1,1,1,1,1,,2026-05-18 16:03:26
+S0388,iNat_Aquila_chrysaetos_01,Aquila chrysaetos,Golden eagle,4,gemma3,mythological,Celtic,0.3,0,forced_evasion,1,1,1,1,1,,2026-05-18 16:04:31
+S0304,GBIF_Diceros_bicornis_00,Diceros bicornis,Black rhino,3,idefics3,conservation,,0.7,0,forced_evasion,3.5,3.7,1,1,2.3,,2026-05-18 16:05:24
+S0209,iNat_Setonix_brachyurus_02,Setonix brachyurus,Quokka,2,qwen2vl2b,conservation,,0.3,0,forced_shr1,4.3,4.4,1,1,2.5,,2026-05-18 16:05:47
+S0140,iNat_Acinonyx_jubatus_02,Acinonyx jubatus,Cheetah,4,qwen3vl8b,factual,,0.7,0,stratified_random,5,5,5,1,4.4,,2026-05-18 16:06:05
+S0200,GBIF_Panthera_pardus_orientalis_02,Panthera pardus orientalis,Amur leopard,3,qwen3vl8b,mythological,West African (Yoruba),0.3,0,stratified_random,1,1,1,1,1,,2026-05-18 16:06:42
+S0317,iNat_Ailurus_fulgens_02,Ailurus fulgens,Red panda,2,llava16,mythological,Hindu,0.3,0,forced_shr1,4.4,3.9,4.4,1,3.6,,2026-05-18 16:07:10
+S0282,iNat_Loxodonta_africana_02,Loxodonta africana,African elephant,4,ayavision,factual,,0.3,2,forced_shr1,5,5,5,5,5,,2026-05-18 16:07:28
+S0090,GBIF_Alligator_mississippiensis_01,Alligator mississippiensis,American alligator,4,qwen2vl2b,childrens,,0.3,1,forced_shr1,1,1.6,1.5,1,1.5,,2026-05-18 16:08:08
+S0497,iNat_Balaenoptera_musculus_03,Balaenoptera musculus,Blue whale,3,idefics3,factual,,0.3,0,forced_shr1,1,1,1,1,1,,2026-05-18 16:08:35
+S0320,iNat_Ursus_arctos_03,Ursus arctos,Grizzly bear,4,ayavision,childrens,,0.7,0,forced_shr1,4.8,4.6,4.6,1,4.2,,2026-05-18 16:09:00
+S0121,iNat_Panthera_onca_02,Panthera onca,Jaguar,1,llava16,factual,,0.7,0,forced_shr1,1,1,1,1,1,,2026-05-18 16:09:27
+S0091,iNat_Alligator_mississippiensis_02,Alligator mississippiensis,American alligator,4,gemma4_8b,mythological,Ancient Greek,0.7,0,forced_shr1,1,1,1,1,1,,2026-05-18 16:09:53
+S0460,iNat_Tapirus_terrestris_01,Tapirus terrestris,South American tapir,2,gemma3,conservation,,0.7,1,forced_shr1,5,5,5,5,5,,2026-05-18 16:10:12
+S0427,iNat_Diceros_bicornis_02,Diceros bicornis,Black rhino,3,qwen2vl2b,factual,,0.3,1,forced_shr1,5,5,3.3,5,4.1,,2026-05-19 05:12:46
+S0415,iNat_Rhincodon_typus_01,Rhincodon typus,Whale shark,2,gemma4_8b,conservation,,0.7,0,forced_shr1,1,1,1,1,1,,2026-05-19 05:23:20
+S0246,GBIF_Hydrochoerus_hydrochaeris_01,Hydrochoerus hydrochaeris,Capybara,2,idefics3,childrens,,0.7,1,forced_ehr0,4.3,3.6,4.6,1,3.4,,2026-05-19 05:26:31
+S0268,GBIF_Panthera_pardus_orientalis_02,Panthera pardus orientalis,Amur leopard,3,llava16,childrens,,0.7,1,forced_shr1,1,1,1,1,1,,2026-05-19 05:40:20
+S0402,iNat_Equus_quagga_01,Equus quagga,Plains zebra,1,llava16,childrens,,0.7,0,stratified_random,1,1,1,1,1,,2026-05-19 05:40:52
+S0192,GBIF_Acinonyx_jubatus_01,Acinonyx jubatus,Cheetah,4,qwen3vl8b,mythological,East Asian (Chinese/Japanese),0.7,0,forced_ehr_high,5,5,5,3.3,4,,2026-05-19 05:41:35
+S0155,iNat_Equus_quagga_01,Equus quagga,Plains zebra,1,qwen2vl2b,conservation,,0.3,2,stratified_random,5,4.3,1,1,2.6,,2026-05-19 05:42:35
+S0328,iNat_Rhinoceros_unicornis_04,Rhinoceros unicornis,Indian rhinoceros,1,gemma3,factual,,0.3,1,forced_evasion,5,4.2,1,1,2.3,,2026-05-19 05:49:33
+S0494,iNat_Ambystoma_mexicanum_00,Ambystoma mexicanum,Axolotl,2,gemma3,factual,,0.7,1,forced_ehr_high,1,1,1,1,1,,2026-05-19 05:49:56
+S0213,iNat_Ailurus_fulgens_02,Ailurus fulgens,Red panda,2,gemma3,childrens,,0.3,0,stratified_random,5,5,5,5,5,,2026-05-19 05:50:22
+S0284,iNat_Rhinoceros_unicornis_02,Rhinoceros unicornis,Indian rhinoceros,1,ayavision,factual,,0.3,0,stratified_random,5,5,5,5,5,,2026-05-19 05:53:27
+S0421,iNat_Gorilla_beringei_beringei_03,Gorilla beringei beringei,Mountain gorilla,3,ayavision,mythological,Celtic,0.3,2,forced_evasion,4,3.5,4.2,1,3.6,,2026-05-19 05:54:21
+S0010,iNat_Ursus_arctos_03,Ursus arctos,Grizzly bear,4,qwen3vl8b,conservation,,0.7,0,stratified_random,5,5,3.8,5,4.2,,2026-05-19 05:55:30
+S0137,iNat_Tapirus_terrestris_04,Tapirus terrestris,South American tapir,2,llava_interleave,factual,,0.7,2,forced_evasion,1,1,1,1,1,,2026-05-19 05:55:57
+S0261,GBIF_Ambystoma_mexicanum_02,Ambystoma mexicanum,Axolotl,2,qwen35_9b,childrens,,0.7,0,stratified_random,1,1,1,1,1,,2026-05-19 05:56:23
+S0422,iNat_Ailuropoda_melanoleuca_02,Ailuropoda melanoleuca,Giant panda,1,gemma4_8b,conservation,,0.7,0,forced_shr1,5,5,5,5,5,,2026-05-19 05:56:40
+S0263,iNat_Acinonyx_jubatus_02,Acinonyx jubatus,Cheetah,4,idefics3,mythological,Celtic,0.3,0,forced_ehr_high,5,5,4.9,1.1,4.1,,2026-05-19 05:57:20
+S0083,iNat_Acinonyx_jubatus_02,Acinonyx jubatus,Cheetah,4,llava16,conservation,,0.7,0,forced_ehr_high,5,4.9,1,5,4,,2026-05-19 05:57:59
+S0084,GBIF_Panthera_pardus_01,Panthera pardus,Leopard,4,qwen2vl2b,factual,,0.7,1,forced_evasion,1,1,1,1,1,,2026-05-19 05:58:17
+S0266,GBIF_Panthera_pardus_orientalis_02,Panthera pardus orientalis,Amur leopard,3,llava16,factual,,0.3,1,forced_ehr_high,1,1,1,1,1,,2026-05-19 05:58:40
+S0224,GBIF_Patagioenas_squamosa_00,Patagioenas squamosa,Scaly-naped pigeon,2,qwen25vl,mythological,Hindu,0.3,1,forced_shr1,1,1,1,1,1,,2026-05-19 05:58:59
+S0165,iNat_Ailurus_fulgens_02,Ailurus fulgens,Red panda,2,qwen35_9b,conservation,,0.7,0,forced_evasion,4.2,5,1,1,3,,2026-05-19 05:59:19
+S0057,GBIF_Panthera_tigris_tigris_02,Panthera tigris tigris,Bengal tiger,1,qwen25vl,childrens,,0.7,1,forced_ehr0,4.8,4.4,2.4,1,2.6,,2026-05-19 06:00:36
+S0334,iNat_Arctictis_binturong_01,Arctictis binturong,Binturong,2,qwen25vl,conservation,,0.3,0,forced_evasion,5,5,1,1,3.6,,2026-05-19 06:00:53
+S0394,iNat_Ailuropoda_melanoleuca_02,Ailuropoda melanoleuca,Giant panda,1,gemma4_8b,factual,,0.7,0,forced_shr1,5,5,5,1,3.9,,2026-05-19 06:01:09
+S0040,GBIF_Panthera_pardus_01,Panthera pardus,Leopard,4,gemma3,conservation,,0.7,2,forced_shr1,1,1,1,1,1,,2026-05-19 06:01:24
+S0181,GBIF_Panthera_pardus_orientalis_02,Panthera pardus orientalis,Amur leopard,3,gemma4_8b,mythological,West African (Yoruba),0.7,0,forced_ehr_high,1,1,1,1,1,,2026-05-19 06:01:40
+S0134,iNat_Diceros_bicornis_03,Diceros bicornis,Black rhino,3,gemma3,factual,,0.7,1,forced_ehr0,5,4,1,1,4,,2026-05-19 06:01:59
+S0319,iNat_Equus_quagga_01,Equus quagga,Plains zebra,1,llava16,mythological,West African (Yoruba),0.3,1,forced_shr1,1,1,1,1,1,,2026-05-19 06:02:14
+S0408,GBIF_Ursus_arctos_01,Ursus arctos,Grizzly bear,4,qwen2vl2b,mythological,Ancient Greek,0.7,1,forced_ehr0,1,1,1,1,1,,2026-05-19 06:02:27
+S0249,GBIF_Panthera_pardus_orientalis_00,Panthera pardus orientalis,Amur leopard,3,llava16,childrens,,0.3,0,forced_shr1,1,1,1,1,1,,2026-05-19 06:02:41
+S0299,GBIF_Ursus_maritimus_00,Ursus maritimus,Polar bear,1,llava_interleave,conservation,,0.3,2,forced_shr1,5,5,5,5,5,,2026-05-19 06:02:58
+S0182,GBIF_Aquila_chrysaetos_00,Aquila chrysaetos,Golden eagle,4,qwen2vl2b,mythological,East Asian (Chinese/Japanese),0.7,1,forced_shr1,1,1,1,1,1,,2026-05-19 06:03:26
+S0011,iNat_Hydrochoerus_hydrochaeris_02,Hydrochoerus hydrochaeris,Capybara,2,qwen3vl8b,factual,,0.3,2,forced_evasion,5,3.5,3.6,1,3.6,,2026-05-19 06:03:49
+S0157,GBIF_Gorilla_beringei_beringei_00,Gorilla beringei beringei,Mountain gorilla,3,idefics3,conservation,,0.7,1,forced_evasion,1,1,1,1,1,,2026-05-19 06:04:03
+S0156,iNat_Ursus_arctos_03,Ursus arctos,Grizzly bear,4,qwen35_9b,mythological,Ancient Greek,0.7,0,stratified_random,4.2,4.4,5,1,4,,2026-05-19 06:07:06
+S0308,iNat_Acinonyx_jubatus_02,Acinonyx jubatus,Cheetah,4,qwen25vl,factual,,0.7,0,forced_shr1,5,5,5,5,5,,2026-05-19 06:07:25
+S0455,GBIF_Alligator_mississippiensis_02,Alligator mississippiensis,American alligator,4,gemma4_8b,conservation,,0.7,0,forced_shr1,1,1,1,1,1,,2026-05-19 06:07:41
+S0346,iNat_Ursus_americanus_00,Ursus americanus,American black bear,4,ayavision,factual,,0.7,1,forced_evasion,1,1,1,1,1,,2026-05-19 06:07:57
+S0037,GBIF_Addax_nasomaculatus_02,Addax nasomaculatus,Addax,3,gemma4_8b,mythological,West African (Yoruba),0.7,1,forced_ehr_high,1,1,1,1,1,,2026-05-19 06:08:11
