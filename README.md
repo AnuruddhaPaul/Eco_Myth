@@ -7,11 +7,11 @@ A multi-phase empirical study evaluating how accurately Vision Language Models (
 ---
 
 > ### 📂 Official Repository
->
+>## https://github.com/AnuruddhaPaul/Eco_Myth
 > **If any file, notebook, or resource is not accessible or not loading in the anonymised submission repository, please visit the official project GitHub page:**
 >
 > ## 👉 [https://github.com/AnuruddhaPaul/Eco_Myth](https://github.com/AnuruddhaPaul/Eco_Myth)
-> https://github.com/AnuruddhaPaul/Eco_Myth
+> ## https://github.com/AnuruddhaPaul/Eco_Myth
 >
 > All source code, outputs, figures, and annotation tools are available there in full. Click the link above to be taken directly to the repository.
 
